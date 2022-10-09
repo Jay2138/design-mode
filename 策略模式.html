@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**
+     * 策略模式： 
+     */
+    // 策略类
+    var performancelS = function (salary) {};
+
+    performancelS.prototype.calculate = function (salary) {
+      return salary * 4;
+    }
+
+    var performancelA = function (salary) {};
+
+    performancelA.prototype.calculate = function (salary) {
+      return salary * 3;
+    }
+
+    var performancelB = function (salary) {};
+
+    performancelB.prototype.calculate = function (salary) {
+      return salary * 2;
+    }
+    // 控制当前流程的类
+    var Bonus = function () {
+      this.salary = null;
+      this.strategy = null;
+    }
+
+    Bonus.prototype.setSalary = function (salary) {
+      this.salary = salary;
+    }
+
+    Bonus.prototype.setStrategy = function (strategy) {
+      this.strategy = strategy;
+    }
+
+    Bonus.prototype.getBonus = function (strategy) {
+      return this.strategy.calculate(this.salary);
+    }
+
+    var bonus = new Bonus();
+    bonus.setSalary(10000);
+    bonus.setStrategy(new performancelA());
+    console.log(bonus.getBonus());
+
+    // var calulateBonus = function (performancelLevel, salary) {
+    //   if (performancelLevel === 'S') {
+    //     performancelS(salary)
+    //   }
+
+    //   if (performancelLevel === 'A') {
+    //     return salary * 3
+    //   }
+
+    //   if (performancelLevel === 'B') {
+    //     return salary * 2
+    //   }
+    // }
+  </script>
+</body>
+
+</html>
