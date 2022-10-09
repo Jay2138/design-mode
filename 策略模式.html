@@ -13,47 +13,72 @@
     /**
      * 策略模式： 
      */
+    /**
+     * 用对象来代替策略类
+     * higher
+     */
+    var strategies = {
+      S: function (salary) {
+        return salary * 4
+      },
+      A: function (salary) {
+        return salary * 3
+      },
+      B: function (salary) {
+        return salary * 2
+      },
+    }
+
+    var calculateBonus = function (performancelLevel, salary) {
+      return strategies[performancelLevel](salary)
+    }
+    console.log(calculateBonus('S', 20000));
+    /**
+     * high
+    */
     // 策略类
-    var performancelS = function (salary) {};
+    // var performancelS = function (salary) {};
 
-    performancelS.prototype.calculate = function (salary) {
-      return salary * 4;
-    }
+    // performancelS.prototype.calculate = function (salary) {
+    //   return salary * 4;
+    // }
 
-    var performancelA = function (salary) {};
+    // var performancelA = function (salary) {};
 
-    performancelA.prototype.calculate = function (salary) {
-      return salary * 3;
-    }
+    // performancelA.prototype.calculate = function (salary) {
+    //   return salary * 3;
+    // }
 
-    var performancelB = function (salary) {};
+    // var performancelB = function (salary) {};
 
-    performancelB.prototype.calculate = function (salary) {
-      return salary * 2;
-    }
+    // performancelB.prototype.calculate = function (salary) {
+    //   return salary * 2;
+    // }
     // 控制当前流程的类
-    var Bonus = function () {
-      this.salary = null;
-      this.strategy = null;
-    }
+    // var Bonus = function () {
+    //   this.salary = null;
+    //   this.strategy = null;
+    // }
 
-    Bonus.prototype.setSalary = function (salary) {
-      this.salary = salary;
-    }
+    // Bonus.prototype.setSalary = function (salary) {
+    //   this.salary = salary;
+    // }
 
-    Bonus.prototype.setStrategy = function (strategy) {
-      this.strategy = strategy;
-    }
+    // Bonus.prototype.setStrategy = function (strategy) {
+    //   this.strategy = strategy;
+    // }
 
-    Bonus.prototype.getBonus = function (strategy) {
-      return this.strategy.calculate(this.salary);
-    }
+    // Bonus.prototype.getBonus = function (strategy) {
+    //   return this.strategy.calculate(this.salary);
+    // }
 
-    var bonus = new Bonus();
-    bonus.setSalary(10000);
-    bonus.setStrategy(new performancelA());
-    console.log(bonus.getBonus());
-
+    // var bonus = new Bonus();
+    // bonus.setSalary(10000);
+    // bonus.setStrategy(new performancelA());
+    // console.log(bonus.getBonus());
+    /**
+     * low
+     */
     // var calulateBonus = function (performancelLevel, salary) {
     //   if (performancelLevel === 'S') {
     //     performancelS(salary)
