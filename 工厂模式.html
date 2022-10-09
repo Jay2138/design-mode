@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**
+     *工厂模式
+     */
+
+    //  function Createerson(name, age, sex){
+    //   this.name = name
+    //   this.age = age
+    //   this.sex = sex
+    //  }
+    //  new Createerson()
+
+    /**
+     * 父类是一个抽象类 不可以直接实例
+     * 子类实现自身的实力方法
+     */
+
+    function BicyleShop(name) {
+      this.name = name
+      this.method = function () {
+        return this.name
+      }
+    }
+
+    BicyleShop.prototype = {
+      constructor: BicyleShop,
+      createBicyle: function () {
+        throw new Error('父类不能直接实例，需要子类来实例')
+      },
+      sellBicyle: function () {
+        var bicyle = this.createBicyle()
+        bicyle.a()
+        bicyle.b()
+        return bicyle
+      }
+    }
+
+    function extend(Sub, Sup) {
+      var F = function () {}
+      F.prototype = Sup.prototype
+      Sub.prototype = new F()
+      Sub.prototype.constructor = Sub
+      Sub.Sup = Sup.prototype
+    }
+
+    function BicyleChild(name) {
+      this.name = name
+      BicyleShop.call(this.name)
+    }
+
+    extend(BicyleChild, BicyleShop)
+    // 子类重写父类方法用来重写createBicyle
+    BicyleChild.prototype.createBicyle = function () {
+      var a = function () {
+        console.log('执行a任务');
+      };
+      var b = function () {
+        console.log('执行b任务');
+      }
+      return {
+        a,
+        b,
+      }
+    }
+
+    var bicyleChild = new BicyleChild('凤凰牌')
+    console.log(bicyleChild);
+    console.log(bicyleChild.createBicyle());
+    console.log(bicyleChild.sellBicyle());
+    // 父类不能直接实例
+    var bicyleShop = new BicyleShop('柏林')
+    console.log(bicyleShop);
+    // console.log(bicyleShop.createBicyle());
+    console.log(bicyleShop.sellBicyle());
+/**
+ * 复杂的工厂模式实现在父类当中去定义抽象的方法，子类可以实现自己的业务逻辑，专业来说
+ * 就是弱化代码耦合，防止代码重复，复杂的代码扔到父类当中，子类继承父类的属性和方法，
+ * 子类只需要做自己的业务逻辑
+*/
+  </script>
+</body>
+
+</html>
