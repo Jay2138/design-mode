@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**
+     * 责任链模式
+     * 1. 充值 500（orderType = 1），100%（isPay充值成功）中 100 的优惠券
+     * 2. 充值 200（orderType = 2），100%（isPay充值成功）中 20 的优惠券
+     * 3. 不充值（orderType = 3），根据优惠券的库（count）存来决定，有几率中 10 的优惠券
+     */
+
+    // ------常规实现------
+    var order = function (orderType, isPay, count) {
+      if (orderType === 1) {
+        if (isPay) {
+          console.log('恭喜中100优惠券');
+        } else {
+          if (count > 0) {
+            console.log('恭喜中10优惠券');
+          } else {
+            console.log('很遗憾没有中优惠券');
+          }
+        }
+      } else if (orderType === 2) {
+        if (isPay) {
+          console.log('恭喜中20优惠券');
+        } else {
+          if (count > 0) {
+            console.log('恭喜中10优惠券');
+          } else {
+            console.log('很遗憾没有中优惠券');
+          }
+        }
+      } else if (orderType === 3) {
+        if (count > 0) {
+          console.log('恭喜中10优惠券');
+        } else {
+          console.log('很遗憾没有中优惠券');
+        }
+      }
+    }
+
+    // ------责任链模式实现------
+
+    function order500(orderType, isPay, count) {
+      if (orderType === 1 && isPay) {
+        console.log('恭喜中100优惠券');
+      } else {
+        return 'nextSuccessor'
+      }
+    }
+
+    function order200(orderType, isPay, count) {
+      if (orderType === 2 && isPay) {
+        console.log('恭喜中20优惠券');
+      } else {
+        return 'nextSuccessor'
+      }
+    }
+
+    function orderNormal(orderType, isPay, count) {
+      if (count > 0) {
+        console.log('恭喜中10优惠券');
+      } else {
+        console.log('很遗憾没有中优惠券');
+      }
+    }
+
+    var Chain = function (fn) {
+      this.fn = fn;
+      this.successor = null
+    }
+
+    Chain.prototype.setNextSuccessor = function (successor) {
+      return (this.successor = successor)
+    }
+    Chain.prototype.passRequest = function (orderType, isPay, count) {
+      var res = this.fn.apply(this, arguments)
+      if (res === 'nextSuccessor') {
+        return (
+          this.successor && this.successor.passRequest.apply(this.successor, arguments)
+        )
+      }
+      return res
+    }
+
+    var chainOrder500 = new Chain(order500)
+    var chainOrder200 = new Chain(order500)
+    var chainOrderNormal = new Chain(orderNormal)
+
+    chainOrder500.setNextSuccessor(chainOrder200)
+    chainOrder200.setNextSuccessor(chainOrderNormal)
+    chainOrder500.passRequest(1, true, 500)
+    console.log(chainOrder500);
+  </script>
+</body>
+
+</html>
