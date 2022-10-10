@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**
+     * 发布订阅模式：对象一对多的依赖关系
+     */
+    // 1.主题（售楼处）--> 充当发布者
+    var sellsOffice = {}
+
+    // 2.缓存列表
+    // sellsOffice.clientList = []
+
+    // sellsOffice.listen = function(key, fn) {
+    //   if(!this.clientList[key]){
+    //     this.clientList[key] = []
+    //   }
+
+    //   this.clientList[key].push(fn) // 添加订阅者
+    // }
+    // // 3.当事件触发的时候（状态发生变化），依次执行回调函数
+    // sellsOffice.trigger = function() {
+    //   var key = Array.prototype.shift.call(arguments)
+    //   var fns = this.clientList[key]
+    //   for(let i = 0; i < fns.length; i++){
+    //     fns[i].apply(this, arguments)
+    //   }
+    // }
+
+
+
+    // 对象实现
+    // var Event = {
+    //   clientList: [],
+    //   listen: function (key, fn) {
+    //     if (!this.clientList[key]) {
+    //       this.clientList[key] = []
+    //     }
+
+    //     this.clientList[key].push(fn) // 添加订阅者
+    //   },
+    //   trigger: function () {
+    //     var key = Array.prototype.shift.call(arguments)
+    //     var fns = this.clientList[key]
+    //     for (let i = 0; i < fns.length; i++) {
+    //       fns[i].apply(this, arguments)
+    //     }
+    //   }
+    // }
+
+    // function installEvent(target, source) {
+    //   // for(let i in source){
+    //   //   target[i] = source[i]
+    //   // }
+    //   // return target
+    //   return Object.assign(target, source)
+    // }
+    // var sellsOffice = installEvent(sellsOffice, Event)
+
+
+
+    // 类实现
+    class Event{
+      constructor(){
+        this.clientList = []
+      }
+      listen(key, fn) {
+        if (!this.clientList[key]) {
+          this.clientList[key] = []
+        }
+
+        this.clientList[key].push(fn) // 添加订阅者
+      }
+      trigger() {
+        var key = Array.prototype.shift.call(arguments)
+        var fns = this.clientList[key]
+        for (let i = 0; i < fns.length; i++) {
+          fns[i].apply(this, arguments)
+        }
+      }
+    }
+
+    class SellsOffice extends Event{
+      constructor() {
+        super()
+      }
+    }
+
+    var sellsOffice = new SellsOffice()
+
+
+    // 绑定监听者
+    sellsOffice.listen('square88', function (price, squareMeter) {
+      console.log('价格：', price);
+      console.log('面积：', squareMeter);
+    }) //  Larry
+
+    sellsOffice.listen('square108', function (price, squareMeter) {
+      console.log('价格：', price);
+      console.log('面积：', squareMeter);
+    }) //  Willam
+
+    sellsOffice.trigger('square88', 1000, '88p')
+  </script>
+</body>
+
+</html>
