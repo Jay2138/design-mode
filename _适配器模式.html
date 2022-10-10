@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>适配器模式</title>
+</head>
+
+<body>
+  <script>
+    var getBeijingCity = function () {
+      var beujingCity = [{
+        name: 'chaoyang',
+        id: 1
+      }, {
+        name: 'haidian',
+        id: 2
+      }]
+      return beujingCity
+    }
+
+    var render = function(fn) {
+      console.log(JSON.stringify(fn()));
+    }
+
+    var addressAdapter = function(fn) {
+      var oldAddress = fn()
+      var item
+      var newAddress = {}
+      for(let i = 0; i < oldAddress.length; i++){
+        item = oldAddress[i]
+        newAddress[item.name] = item.id
+      }
+      return function() {
+        return newAddress
+      }
+    }
+
+    render(addressAdapter(getBeijingCity))
+
+  </script>
+</body>
+
+</html>
