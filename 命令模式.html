@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button id="button1">button1</button>
+  <button id="button2">button2</button>
+  <button id="button3">button3</button>
+  <script>
+    var button1 = document.getElementById('button1')
+    var button2 = document.getElementById('button2')
+    var button3 = document.getElementById('button3')
+    /**
+     * 请求者与被请求者之间松耦合的设计模式
+     * 通过抽象一个命令类，在类上面定义一个统一的对外接口execute，调用指定的业务逻辑，通过这种方式
+     * 定义 请求者和被请求者之间的关系。
+     */
+    var setCommand = function (button, command) {
+      button.onclick = function () {
+        command.execute()
+      }
+    }
+    // var setCommand = function (button, func) {
+    //   button.onclick = function () {
+    //     func()
+    //   }
+    // }
+    /**
+     * 业务对象
+     */
+    var MenuBar = {
+      // 刷新菜单的业务逻辑
+      refresh: function () {
+        console.log('刷新菜单');
+      }
+    }
+
+    var subMenu = {
+      add: function () {
+        console.log('增加子菜单');
+      },
+      del: function () {
+        console.log('删除子菜单');
+      }
+    }
+
+    function RefreshMenuBarCommand(receiver) {
+      return {
+        execute: function () {
+          receiver.refresh()
+        }
+      }
+    }
+
+    var refreshMenuBarCommand = RefreshMenuBarCommand(MenuBar)
+    setCommand(button1, refreshMenuBarCommand)
+
+
+    // 定义刷新的命令类
+    // class RefreshMenuBarCommand {
+    //   constructor(receiver) {
+    //     this.receiver = receiver
+    //   }
+    //   execute() {
+    //     this.receiver.refresh()
+    //   }
+    // }
+
+    // 定义添加子菜单命令类
+    // class AddSubMenuCommand {
+    //   constructor(receiver) {
+    //     this.receiver = receiver
+    //   }
+    //   execute() {
+    //     this.receiver.add()
+    //   }
+    // }
+
+    // // 定义删除子菜单命令类
+    // class DelSubMenuCommand {
+    //   constructor(receiver) {
+    //     this.receiver = receiver
+    //   }
+    //   execute() {
+    //     this.receiver.del()
+    //   }
+    // }
+
+
+    // var refreshMenuBarCommand = new RefreshMenuBarCommand(MenuBar)
+    // var delSubMenuCommand = new DelSubMenuCommand(subMenu)
+    // var addSubMenuCommand = new AddSubMenuCommand(subMenu)
+
+    // setCommand(button1, refreshMenuBarCommand)
+    // setCommand(button2, addSubMenuCommand)
+    // setCommand(button3, delSubMenuCommand)
+  </script>
+</body>
+
+</html>
