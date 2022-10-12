@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**
+     * 享元模式(flyWeight----->轻量-->起一定性能优化作用)
+     */
+
+    // ----------------------------
+
+    // 100套  男女 各 50 套衣服
+    // class Modal {
+    //   constructor(sex, clothes) {
+    //     this.sex = sex
+    //     this.clothes = clothes
+    //   }
+    //   takePhoto() {
+    //     console.log(`sex=${this.sex}-----衣服+${this.clothes}`);
+    //   }
+    // }
+    // // 100个模特对应100套衣服
+    // for(let i = 0; i < 50; i++){
+    //   var modal = new Modal('male', i)
+    //   modal.takePhoto()
+    // }
+    // for(let j = 0; j < 50; j++){
+    //   var modal = new Modal('female', j)
+    //   modal.takePhoto()
+    // }
+
+    /********享元模式（flyWeight）******/
+    // var Modal = function (sex) {
+    //   this.sex = sex // 内部状态 1
+    // }
+    // Modal.prototype.takePhoto = function () {
+    //   console.log(`sex=${this.sex}-----衣服+${this.clothes}`);
+    // }
+    // // 2
+    // var maleModal = new Modal('male') // 3
+    // var femaleModal = new Modal('female') // 3
+    // for (let i = 0; i < 50; i++) {
+    //   maleModal.clothes = i // 外部状态 4
+    //   maleModal.takePhoto()
+    // }
+    // for (let i = 0; i < 50; i++) {
+    //   femaleModal.clothes = i // 外部状态 4
+    //   femaleModal.takePhoto()
+    // }
+    // 1.共享状态放到 对象内部  (sex情况较少，clothes情况较多)
+    // 2.创建共享的对象
+    // 3.内部状态不变
+    // 4.外部状态会根据不同的环境而去变化
+
+    /*********享元模式（flyWeight-----> 优化 ********/
+    var Modal = function (sex) {
+      this.sex = sex
+    }
+    Modal.prototype.takePhoto = function () {
+      console.log(`sex=${this.sex}-----衣服+${this.clothes}`);
+    }
+    // 创建实例工厂
+    var modalfactory = (function () {
+      var modalGender = {}
+      return {
+        // 单例模式
+        createModal: function (sex) {
+          if (modalGender[sex]) {
+            return modalGender[sex]
+          }
+          return (modalGender[sex] = new Modal(sex))
+        }
+      }
+    })()
+
+    var modalMangger = (function () {
+      const modalObj = {}
+      return {
+        // 添加内部状态方法
+        add: function (sex, i) {
+          modalObj[i] = {
+            clothes: i
+          }
+          return modalfactory.createModal(sex)
+        },
+        // 添加外部状态方法
+        setExternalState: function (modal, i) {
+          modal.clothes = modalObj[i].clothes
+        }
+      }
+    })()
+
+    for (let i = 0; i < 50; i++) {
+      var maleModal = modalMangger.add('male', i) // 创建实例并添加内部状态
+      // console.log(maleModal);---->Modal {sex: 'male'}
+      modalMangger.setExternalState(maleModal, i) // 添加外部状态
+      // console.log(maleModal);---->Modal {sex: 'male', clothes: 0}
+      maleModal.takePhoto()
+    }
+
+    for (let i = 0; i < 50; i++) {
+      var maleModal = modalMangger.add('female', i)
+      modalMangger.setExternalState(maleModal, i)
+      maleModal.takePhoto()
+    }
+  </script>
+</body>
+
+</html>
